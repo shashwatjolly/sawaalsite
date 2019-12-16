@@ -1,0 +1,20 @@
+{
+  "name": "sawaalsite",
+  "version": "1.0.0",
+  "description": "Website client for sawaal",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SGSJ",
+  "license": "ISC",
+  "devDependencies": {
+    "lite-server": "^2.5.4",
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "ejs": "^3.0.1",
+    "express": "^4.17.1"
+  }
+}
