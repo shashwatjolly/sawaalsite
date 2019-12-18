@@ -14,16 +14,9 @@
     "nodemon": "^2.0.2"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "firebase": "^7.6.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shashwatjolly/sawaalsite.git"
-  },
-  "bugs": {
-    "url": "https://github.com/shashwatjolly/sawaalsite/issues"
-  },
-  "homepage": "https://github.com/shashwatjolly/sawaalsite#readme"
+  }
 }

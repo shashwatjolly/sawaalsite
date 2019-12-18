@@ -27,36 +27,59 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-9" style="margin: 0 auto">
+
+              <% for (var i = 0; i < papers.length; i++) { %>
+
+                <%if ( "isYear" in papers[i]) { %>
+
+
+              <div class="card">
+                  <div class="card-body">
+                    <div class="row" style="margin-left: 60px">
+                        <div class="col-md-12" style="text-align: center">
+                            <h3><%- papers[i].year %></h3> 
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                
+
+                  <% } else { %>
+
               <div class="card">
                 <div class="card-body">
                   <div style="width:41px; position: absolute; top: 50%; -moz-transform: translateY(-50%); -webkit-transform: translateY(-50%); transform: translateY(-50%);">
-                    <a class="btn btn-round btn-just-icon btn-primary upvote" style="font-size: 29;" href="#pablo">
-                      <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_up</i>
-                      <div class="ripple-container"></div>
-                    </a>
-                    <h4 style="text-align: center; margin-bottom: 0">21</h2>
-                    <a class="btn btn-round btn-just-icon btn-primary downvote" href="#pablo">
-                        <i class="material-icons" style="font-size: 1.2em; text-align: center">keyboard_arrow_down</i>
-                        <div class="ripple-container"></div>
-                      </a>
+                    
+                    <button class="btn btn-round btn-just-icon btn-primary upvote" style="font-size: 29;">
+                    <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_up</i>
+                    </button>
+                    
+                    <h4 style="text-align: center; margin-bottom: 0"><%- papers[i].totalVotes %></h2>
+
+                    <button class="btn btn-round btn-just-icon btn-primary downvote" style="font-size: 29;">
+                      <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_down</i>
+                    </button>
                   </div>
                   <div class="row" style="margin-left: 60px">
-                    <h3 class="col-md-4 card-title" style="text-align: center">CS301</h4>
-                    <h3 class="col-md-4 card-title" style="text-align: center">Quiz 1</h4>
-                    <h3 class="col-md-4 card-title" style="text-align: center">2019</h4>
+                    <h3 class="col-md-4 card-title" style="text-align: center"><%- papers[i].CourseCode %></h4>
+                    <h3 class="col-md-4 card-title" style="text-align: center"><%- papers[i].Type %></h4>
+                    <h3 class="col-md-4 card-title" style="text-align: center"><%- papers[i].Year %></h4>
                   </div>
                   <div class="row" style="margin-left: 60px">
                       <div class="col-md-12" style="text-align: center">
-                          <h5>Prof: Karfa</h5> 
+                          <h5>Prof: <%- papers[i].Prof %></h5> 
                       </div>
                   </div>
                   <div class="row" style="margin-left: 60px">
                       <div class="col-md-12" style="text-align: center">
-                          <a href="#pablo" class="btn btn-primary btn-round">Download</a>
+                          <a href="<%- papers[i].FileUrl %>" download="file1" class="btn btn-primary btn-round">Download</a>
                       </div>
                   </div>
                 </div>
               </div>
+
+              <% } %>
+              <% }; %>
             </div>
           </div>
         </div>
@@ -83,8 +106,9 @@
     $(document).ready(function () {
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
-
     });
+
+
   </script>
 </body>
 
