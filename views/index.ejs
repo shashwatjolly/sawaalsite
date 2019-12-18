@@ -25,7 +25,8 @@
     <div class="main-panel">
       <div class="content">
         <div class="container-fluid">
-          <div class="row">
+          <%- include('loading') %>
+          <div class="row maincontent" hidden>
             <div class="col-md-9" style="margin: 0 auto">
 
               <% for (var i = 0; i < papers.length; i++) { %>
@@ -189,6 +190,7 @@
 
 
   </script>
+  <%- include('auth') %>
 </body>
 
 </html>
