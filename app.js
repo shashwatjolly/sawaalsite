@@ -22,7 +22,7 @@ var firebaseApp = firebase.initializeApp({
 var databaseRef = firebaseApp.database();
 
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('form');
 });
 app.get('/index', (req, res) => {
     res.render('index');
