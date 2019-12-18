@@ -29,7 +29,11 @@ function getUserMail(){
     return "shaurya.gomber98@iitg.ac.in";
 }
 
-function getPapersByYear(years,referString,res){
+function isInArray(value, array) {
+    return array.indexOf(value) > -1;
+  }
+
+function getPapersByYear(years,referString,res,loggedInUser){
     var locks = [];
     var papers = [];
 
@@ -39,7 +43,6 @@ function getPapersByYear(years,referString,res){
 
     var displayYear = years.length > 1; 
 
-    console.log(locks);
     for(var i=0;i<years.length;i++){
 
         var refString = `${referString}/${years[i]}`;
@@ -51,6 +54,13 @@ function getPapersByYear(years,referString,res){
             snapshot.forEach(function(child) {
                 var paper = child.val();
                 paper.key = child.key;
+
+                var upvoters = paper.upvoters;
+                var downvoters = paper.downvoters;
+
+                paper.hasupvoted = isInArray(loggedInUser,upvoters);
+                paper.hasdownvoted = isInArray(loggedInUser,downvoters); 
+
                 papers.unshift(paper);
             });
 
@@ -102,6 +112,13 @@ app.post('/', urlencodedParser, (req, res) => {
             snapshot.forEach(function(child) {
                 var paper = child.val();
                 paper.key = child.key;
+
+                var upvoters = paper.upvoters;
+                var downvoters = paper.downvoters;
+
+                paper.hasupvoted = isInArray(loggedInUser,upvoters);
+                paper.hasdownvoted = isInArray(loggedInUser,downvoters); 
+
                 papers.unshift(paper);
             });
             res.render('index' , {"papers":papers});
@@ -121,7 +138,7 @@ app.post('/', urlencodedParser, (req, res) => {
             });
             
             console.log(years);
-            getPapersByYear(years,referString,res);
+            getPapersByYear(years,referString,res,loggedInUser);
             }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
         });

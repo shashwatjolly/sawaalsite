@@ -31,8 +31,6 @@
               <% for (var i = 0; i < papers.length; i++) { %>
 
                 <%if ( "isYear" in papers[i]) { %>
-
-
               <div class="card">
                   <div class="card-body">
                     <div class="row" style="margin-left: 60px">
@@ -50,15 +48,40 @@
                 <div class="card-body">
                   <div style="width:41px; position: absolute; top: 50%; -moz-transform: translateY(-50%); -webkit-transform: translateY(-50%); transform: translateY(-50%);">
                     
-                    <button class="btn btn-round btn-just-icon btn-primary upvote" style="font-size: 29;">
+                    <%if (papers[i].hasupvoted) { %>
+
+                    <button class="btn btn-round btn-just-icon btn-primary upvote active" id="u<%- i %>" style="font-size: 29;"
+                      onclick="clicked(true,'u<%- i %>','d<%- i %>','t<%- i %>')">
                     <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_up</i>
                     </button>
-                    
-                    <h4 style="text-align: center; margin-bottom: 0"><%- papers[i].totalVotes %></h2>
 
-                    <button class="btn btn-round btn-just-icon btn-primary downvote" style="font-size: 29;">
+                    <% } else { %>
+                      
+                      <button class="btn btn-round btn-just-icon btn-primary upvote" id="u<%- i %>" style="font-size: 29;"
+                          onclick="clicked(true,'u<%- i %>','d<%- i %>','t<%- i %>')">
+                      <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_up</i>
+                      </button> 
+
+                    <% } %>
+
+                    <h4 style="text-align: center; margin-bottom: 0" id="t<%- i %>"><%- papers[i].totalVotes %></h4>
+
+                    <%if (papers[i].hasdownvoted) { %>
+
+                    <button class="btn btn-round btn-just-icon btn-primary downvote active" id="d<%- i %>" style="font-size: 29;"
+                        onclick="clicked(false,'d<%- i %>','u<%- i %>','t<%- i %>')">
                       <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_down</i>
                     </button>
+
+                    <% } else { %>
+
+                      <button class="btn btn-round btn-just-icon btn-primary downvote" id="d<%- i %>"  style="font-size: 29;"
+                          onclick="clicked(false,'d<%- i %>','u<%- i %>','t<%- i %>')">
+                          <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_down</i>
+                        </button> 
+
+                    <% } %>
+
                   </div>
                   <div class="row" style="margin-left: 60px">
                     <h3 class="col-md-4 card-title" style="text-align: center"><%- papers[i].CourseCode %></h4>
@@ -107,6 +130,62 @@
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
     });
+
+    function clicked(isUpvote,myId,otherId,textId){
+
+      var mainSelector = '#'+myId;
+      var otherSelector = '#'+otherId;
+      var textSelector = '#'+textId;
+
+      
+      if(isUpvote){
+        if($(mainSelector).hasClass("active")){
+          $(mainSelector).removeClass("active");
+          $(mainSelector).blur();
+
+          var votes = Number($(textSelector).text());
+          $(textSelector).text(votes-1);
+        }
+        else{
+          $(mainSelector).addClass("active");
+          $(mainSelector).blur();
+          var votes = Number($(textSelector).text());
+
+          if($(otherSelector).hasClass("active")){
+              $(otherSelector).removeClass("active");
+              $(textSelector).text(votes+2);
+          }
+          else{
+              $(textSelector).text(votes+1);
+          }
+
+        }
+      }
+      else{
+        if($(mainSelector).hasClass("active")){
+          $(mainSelector).removeClass("active");
+          $(mainSelector).blur();
+
+          var votes = Number($(textSelector).text());
+          $(textSelector).text(votes+1);
+        }
+        else{
+          $(mainSelector).addClass("active");
+          $(mainSelector).blur();
+          var votes = Number($(textSelector).text());
+
+          if($(otherSelector).hasClass("active")){
+              $(otherSelector).removeClass("active");
+              $(textSelector).text(votes-2);
+          }
+          else{
+              $(textSelector).text(votes-1);
+          }
+
+        }
+      }
+
+    }
 
 
   </script>
