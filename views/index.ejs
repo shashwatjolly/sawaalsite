@@ -25,7 +25,8 @@
     <div class="main-panel">
       <div class="content">
         <div class="container-fluid">
-          <div class="row">
+          <%- include('loading') %>
+          <div class="row maincontent" hidden>
             <div class="col-md-9" style="margin: 0 auto">
 
               <% for (var i = 0; i < papers.length; i++) { %>
@@ -102,14 +103,7 @@
   <script src="./assets/js/material-dashboard.min.js?v=2.1.0" type="text/javascript"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="./assets/demo/demo.js"></script>
-  <script>
-    $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
-    });
-
-
-  </script>
+  <%- include('auth') %>
 </body>
 
 </html>
