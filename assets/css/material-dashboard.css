@@ -6392,10 +6392,6 @@ a.text-dark:hover, a.text-dark:focus {
       color: #fff;
       background-color: #3167cc;
       border-color: #701c7e; }
-    .btn.btn-primary.upvote:focus, .btn.btn-primary.focus.upvote, .btn.btn-primary.upvote:hover {
-      color: #fff;
-      background-color: #ff6500;
-      border-color: #ff6500; }
     .btn.btn-primary:active, .btn.btn-primary.active,
     .open > .btn.btn-primary.dropdown-toggle,
     .show > .btn.btn-primary.dropdown-toggle {
@@ -6413,6 +6409,23 @@ a.text-dark:hover, a.text-dark:focus {
         color: #fff;
         background-color: #3167cc;
         border-color: #3f1048; }
+    
+    .btn.btn-primary.upvote {
+      box-shadow: 0 2px 2px 0 rgba(255, 101, 0, 0.14), 0 3px 1px -2px rgba(255, 101, 0, 0.2), 0 1px 5px 0 rgba(255, 101, 0, 0.12);
+    }
+    .btn.btn-primary.upvote:focus, .btn.btn-primary.focus.upvote, .btn.btn-primary.upvote:hover, .btn.btn-primary.upvote:active, .btn.btn-primary.upvote.active {
+      color: #fff;
+      background-color: #ff6500;
+      border-color: #ff6500; }
+
+    .btn.btn-primary.downvote {
+      box-shadow: 0 2px 2px 0 rgba(61, 130, 255, 0.14), 0 3px 1px -2px rgba(61, 130, 255, 0.2), 0 1px 5px 0 rgba(61, 130, 255, 0.12);
+    }
+    .btn.btn-primary.downvote:focus, .btn.btn-primary.focus.downvote, .btn.btn-primary.downvote:hover, .btn.btn-primary.downvote:active, .btn.btn-primary.downvote.active {
+      color: #fff;
+      background-color: #3d82ff;
+      border-color: #3d82ff; }
+
     .open > .btn.btn-primary.dropdown-toggle.bmd-btn-icon {
       color: inherit;
       background-color: #3167cc; }
@@ -6424,8 +6437,16 @@ a.text-dark:hover, a.text-dark:focus {
     .btn.btn-primary.disabled:hover, .btn.btn-primary:disabled:hover {
       background-color: #3167cc;
       border-color: #3167cc; }
+
     .btn.btn-primary:focus, .btn.btn-primary:active, .btn.btn-primary:hover {
       box-shadow: 0 14px 26px -12px rgba(49, 103, 204, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(49, 103, 204, 0.2); }
+
+    .btn.btn-primary.upvote:focus, .btn.btn-primary.upvote:active, .btn.btn-primary.upvote:hover {
+      box-shadow: 0 14px 26px -12px rgba(255, 101, 0, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(255, 101, 0, 0.2); }
+
+    .btn.btn-primary.downvote:focus, .btn.btn-primary.downvote:active, .btn.btn-primary.downvote:hover {
+      box-shadow: 0 14px 26px -12px rgba(61, 130, 255, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(61, 130, 255, 0.2); }
+
     .btn.btn-primary.btn-link {
       background-color: transparent;
       color: #3167cc;
@@ -11651,7 +11672,7 @@ label {
   .card .card-header-primary:not(.card-header-icon):not(.card-header-text), .card.bg-primary,
   .card.card-rotate.bg-primary .front,
   .card.card-rotate.bg-primary .back {
-    background: linear-gradient(60deg, #ab47bc, #8e24aa); }
+    background: linear-gradient(60deg, #3d82ff, #3167cc); }
   .card .card-header-info .card-icon,
   .card .card-header-info .card-text,
   .card .card-header-info:not(.card-header-icon):not(.card-header-text), .card.bg-info,

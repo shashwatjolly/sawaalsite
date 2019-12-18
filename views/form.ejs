@@ -27,19 +27,19 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-9" style="margin: 0 auto">
-                <!-- Card -->
                 <div class="card mx-xl-5">
-
-                        <!-- Card body -->
+                        <div class="card-header card-header-primary">
+                          <h4 class="card-title">Enter Details</h4>
+                        </div>
                         <div class="card-body">
-                    
                         <!-- Default form subscription -->
                         <form method="POST">
-                            <p class="h4 text-center py-4">Find Paper</p>
+                            <div class = "form-group">
+                            <!-- <p class="h4 text-center py-4">Find Paper</p> -->
                     
-                            <label class="grey-text font-weight-light">Course Code</label>
-                            <input type="text" name="code" class="form-control">
-
+                              <label class="bmd-label-floating">Course Code</label>
+                              <input type="text" name="code" class="form-control">
+                            </div>
                     
                             <br><br>
                     
@@ -52,12 +52,13 @@
                                     <option value="Other">Other</option> 
                                 </select> 
                     
-                            <label for="courseYear" class="grey-text font-weight-light">Year of Examination</label>
-                            <input type="text" name="year" class="form-control">
-
-                            <div class="text-center py-4 mt-3">
-                            <button class="btn btn-outline-purple" type="submit">Find<span class="glyphicon glyphicon-search"></span></button>
+                            <div class="form-group">
+                              <label for="courseYear" class="bmd-label-floating">Year of Examination</label>
+                              <input type="text" name="year" class="form-control">
                             </div>
+                            <div class="text-center py-4 mt-3">
+                            <button class="btn btn-primary btn-round" type="submit">Find<span class="glyphicon glyphicon-search"></span></button>
+                          </div>
                         </form>
                         <!-- Default form subscription -->
                     
