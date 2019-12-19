@@ -49,39 +49,18 @@
                 <div class="card-body">
                   <div style="width:41px; position: absolute; top: 50%; -moz-transform: translateY(-50%); -webkit-transform: translateY(-50%); transform: translateY(-50%);">
                     
-                    <%if (papers[i].hasupvoted) { %>
-
-                    <button class="btn btn-round btn-just-icon btn-primary upvote active" id="u<%- i %>" style="font-size: 29;"
-                      onclick="clicked(true,'u<%- i %>','d<%- i %>','t<%- i %>')">
-                    <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_up</i>
-                    </button>
-
-                    <% } else { %>
-                      
-                      <button class="btn btn-round btn-just-icon btn-primary upvote" id="u<%- i %>" style="font-size: 29;"
-                          onclick="clicked(true,'u<%- i %>','d<%- i %>','t<%- i %>')">
+                      <button class="btn btn-round btn-just-icon btn-primary upvote voters" id="u<%- i %>" style="font-size: 29;"
+                          onclick="clicked(true,'u<%- i %>','d<%- i %>','t<%- i %>','<%- i %>')">
                       <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_up</i>
                       </button> 
 
-                    <% } %>
 
                     <h4 style="text-align: center; margin-bottom: 0" id="t<%- i %>"><%- papers[i].totalVotes %></h4>
 
-                    <%if (papers[i].hasdownvoted) { %>
-
-                    <button class="btn btn-round btn-just-icon btn-primary downvote active" id="d<%- i %>" style="font-size: 29;"
-                        onclick="clicked(false,'d<%- i %>','u<%- i %>','t<%- i %>')">
-                      <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_down</i>
-                    </button>
-
-                    <% } else { %>
-
-                      <button class="btn btn-round btn-just-icon btn-primary downvote" id="d<%- i %>"  style="font-size: 29;"
-                          onclick="clicked(false,'d<%- i %>','u<%- i %>','t<%- i %>')">
+                      <button class="btn btn-round btn-just-icon btn-primary downvote voters" id="d<%- i %>"  style="font-size: 29;"
+                          onclick="clicked(false,'d<%- i %>','u<%- i %>','t<%- i %>','<%- i %>')">
                           <i class="material-icons" style="font-size: 1.2em; text-align: center" >keyboard_arrow_down</i>
                         </button> 
-
-                    <% } %>
 
                   </div>
                   <div class="row" style="margin-left: 60px">
@@ -126,18 +105,82 @@
   <script src="./assets/js/material-dashboard.min.js?v=2.1.0" type="text/javascript"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="./assets/demo/demo.js"></script>
-  <script>
-    $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
-    });
 
-    function clicked(isUpvote,myId,otherId,textId){
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/7.6.0/firebase-database.js"></script>
+  <script>
+    // Configuring firebase.
+    var firebaseApp = firebase.initializeApp({
+          apiKey: "AIzaSyAAqzctObFVSwj4YVwJh6NMARNTKqJCFFQ",
+          authDomain: "sawaal-sgsj.firebaseapp.com",
+          databaseURL: "https://sawaal-sgsj.firebaseio.com",
+          projectId: "sawaal-sgsj",
+          storageBucket: "sawaal-sgsj.appspot.com",
+          messagingSenderId: "1086466113456",
+          appId: "1:1086466113456:web:a4af7708fa679df8f4e075"
+      });
+      var auth = firebaseApp.auth();
+      var db = firebaseApp.database();
+
+      var userMail = "";
+      auth.onAuthStateChanged(function(user) {
+      if (user) {
+        userMail = auth.currentUser.email;
+        highlight(userMail);
+      } else {
+        // No user is signed in.
+      }
+      });
+
+      function inArray(needle, haystack){
+        var found = 0;
+        for (var i=0, len=haystack.length;i<len;i++) {
+            if (haystack[i] == needle) return i;
+                found++;
+        }
+        return -1;
+      }
+
+    function highlight(userMail){ 
+
+      var papers = '<%- JSON.stringify(papers) %>';
+      var papersObj = JSON.parse(papers);
+
+      $('.voters').each(function(i, obj) {
+          var idSel = '#'+obj["id"];
+          var ind = Number(i);
+          ind = Math.floor(ind/2);
+
+          if(i%2 == 0){
+            var upvoters = papersObj[ind].upvoters;
+
+            if(inArray(userMail,upvoters) != -1){
+              $(idSel).addClass("active");
+            }
+          }
+          else{
+            var downvoters = papersObj[ind].downvoters;
+
+            if(inArray(userMail,downvoters) != -1){
+              $(idSel).addClass("active");
+            }
+          }
+      });
+    }
+
+ 
+
+    function clicked(isUpvote,myId,otherId,textId,index){
 
       var mainSelector = '#'+myId;
       var otherSelector = '#'+otherId;
       var textSelector = '#'+textId;
 
+      index = Number(index);
+
+      var paperString = '<%- JSON.stringify(papers) %>';
+      var papers = JSON.parse(paperString);
       
       if(isUpvote){
         if($(mainSelector).hasClass("active")){
@@ -146,6 +189,8 @@
 
           var votes = Number($(textSelector).text());
           $(textSelector).text(votes-1);
+
+          performTransactions(-1,0,papers[index]);
         }
         else{
           $(mainSelector).addClass("active");
@@ -155,9 +200,15 @@
           if($(otherSelector).hasClass("active")){
               $(otherSelector).removeClass("active");
               $(textSelector).text(votes+2);
+
+              performTransactions(2,0,papers[index]);
+
           }
           else{
               $(textSelector).text(votes+1);
+
+              performTransactions(1,0,papers[index]);
+
           }
 
         }
@@ -169,6 +220,8 @@
 
           var votes = Number($(textSelector).text());
           $(textSelector).text(votes+1);
+
+          performTransactions(0,-1,papers[index]);
         }
         else{
           $(mainSelector).addClass("active");
@@ -178,9 +231,14 @@
           if($(otherSelector).hasClass("active")){
               $(otherSelector).removeClass("active");
               $(textSelector).text(votes-2);
+
+              performTransactions(0,2,papers[index]);
+
           }
           else{
               $(textSelector).text(votes-1);
+              performTransactions(0,1,papers[index]);
+
           }
 
         }
@@ -188,6 +246,26 @@
 
     }
 
+    function performTransactions(upChange,downChange,paper){
+    
+      var referString = "Uploads/" + paper.CourseCode + "_" + paper.type + "/" + paper.year + "/" + paper.key;
+      var paperRef = db.ref(referString);
+
+      let transaction = db.runTransaction(t => {
+        return t.get(referString)
+          .then(doc => {
+            let newUpvotes = doc.data().upvoterCount + upChange;
+              t.update(referString, {upvoterCount: newUpvotes});
+              return Promise.resolve('UpvoteCount increased to ' + newUpvotes);
+          });
+      }).then(result => {
+        console.log('Transaction success', result);
+      }).catch(err => {
+        console.log('Transaction failure:', err);
+      });
+
+
+    }
 
   </script>
   <%- include('auth') %>

@@ -25,14 +25,6 @@ var databaseRef = firebaseApp.database();
 // To parse form data.
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-function getUserMail(){
-    return "shaurya.gomber98@iitg.ac.in";
-}
-
-function isInArray(value, array) {
-    return array.indexOf(value) > -1;
-  }
-
 function getPapersByYear(years,referString,res,loggedInUser){
     var locks = [];
     var papers = [];
@@ -54,13 +46,6 @@ function getPapersByYear(years,referString,res,loggedInUser){
             snapshot.forEach(function(child) {
                 var paper = child.val();
                 paper.key = child.key;
-
-                var upvoters = paper.upvoters;
-                var downvoters = paper.downvoters;
-
-                paper.hasupvoted = isInArray(loggedInUser,upvoters);
-                paper.hasdownvoted = isInArray(loggedInUser,downvoters); 
-
                 papers.unshift(paper);
             });
 
@@ -100,8 +85,7 @@ app.post('/', urlencodedParser, (req, res) => {
     const type = req.body.type;
     const year = req.body.year;
 
-    var loggedInUser = getUserMail();
-    
+    console.log(req.user);    
     if(year != ""){
         var referString = `Uploads/${code}_${type}/${year}`;
         var papersRef = databaseRef.ref(referString);
@@ -112,13 +96,6 @@ app.post('/', urlencodedParser, (req, res) => {
             snapshot.forEach(function(child) {
                 var paper = child.val();
                 paper.key = child.key;
-
-                var upvoters = paper.upvoters;
-                var downvoters = paper.downvoters;
-
-                paper.hasupvoted = isInArray(loggedInUser,upvoters);
-                paper.hasdownvoted = isInArray(loggedInUser,downvoters); 
-
                 papers.unshift(paper);
             });
             res.render('index' , {"papers":papers});
@@ -138,7 +115,7 @@ app.post('/', urlencodedParser, (req, res) => {
             });
             
             console.log(years);
-            getPapersByYear(years,referString,res,loggedInUser);
+            getPapersByYear(years,referString,res);
             }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
         });
