@@ -226,7 +226,7 @@
           var votes = Number($(textSelector).text());
           $(textSelector).text(votes-1);
 
-          performTransactions(-1,0,papers[index]);
+          performTransactions(-1,0,0,1,0,0,papers[index]);
         }
         else{
           $(mainSelector).addClass("active");
@@ -237,13 +237,13 @@
               $(otherSelector).removeClass("active");
               $(textSelector).text(votes+2);
 
-              performTransactions(2,0,papers[index]);
+              performTransactions(1,-1,1,0,0,1,papers[index]);
 
           }
           else{
               $(textSelector).text(votes+1);
 
-              performTransactions(1,0,papers[index]);
+              performTransactions(1,0,1,0,0,0,papers[index]);
 
           }
 
@@ -257,7 +257,7 @@
           var votes = Number($(textSelector).text());
           $(textSelector).text(votes+1);
 
-          performTransactions(0,-1,papers[index]);
+          performTransactions(0,-1,0,0,0,1,papers[index]);
         }
         else{
           $(mainSelector).addClass("active");
@@ -268,12 +268,12 @@
               $(otherSelector).removeClass("active");
               $(textSelector).text(votes-2);
 
-              performTransactions(0,2,papers[index]);
+              performTransactions(-1,1,0,1,1,0,papers[index]);
 
           }
           else{
               $(textSelector).text(votes-1);
-              performTransactions(0,1,papers[index]);
+              performTransactions(0,1,0,0,1,0,papers[index]);
 
           }
 
@@ -282,22 +282,70 @@
 
     }
 
-    function performTransactions(upChange,downChange,paper){
+    function performTransactions(upChange,downChange,addup,delup,addown,deldown,paper){
     
-      var referString = "Uploads/" + paper.CourseCode + "_" + paper.type + "/" + paper.year + "/" + paper.key;
+      var referString = "Uploads/" + paper.CourseCode + "_" + paper.Type + "/" + paper.Year + "/" + paper.key;
       var paperRef = db.ref(referString);
 
-      let transaction = db.runTransaction(t => {
-        return t.get(referString)
-          .then(doc => {
-            let newUpvotes = doc.data().upvoterCount + upChange;
-              t.update(referString, {upvoterCount: newUpvotes});
-              return Promise.resolve('UpvoteCount increased to ' + newUpvotes);
-          });
-      }).then(result => {
-        console.log('Transaction success', result);
-      }).catch(err => {
-        console.log('Transaction failure:', err);
+      var uploaderRefString = "Users/" + paper.uploaderID;
+      var uploaderRef = db.ref(uploaderRefString);
+
+      // Change number of upvotes.
+      paperRef.child("upvoteCount").transaction( (value) => {
+        if(value != null){
+          value += upChange;
+        }
+        return value;
+      });
+
+      // Change number of downvotes.
+      paperRef.child("downvoteCount").transaction( (value) => {
+        if(value != null){
+          value += downChange;
+        }
+        return value;
+      });
+
+      // Update upvoters list.
+      paperRef.child("upvoters").transaction( (value) => {
+        if(value != null){
+          if(addup==1){
+            value.push(userMail);
+          }
+          else if(delup==1){
+            value.splice(value.indexOf(userMail),1);
+          }
+        }
+        return value;
+      });
+
+      // Update downvoters list.
+      paperRef.child("downvoters").transaction( (value) => {
+        if(value != null){
+          if(addown==1){
+            value.push(userMail);
+          }
+          else if(deldown==1){
+            value.splice(value.indexOf(userMail),1);
+          }
+        }
+        return value;
+      });
+
+      // Change total votes.
+      paperRef.child("totalVotes").transaction( (value) => {
+        if(value != null){
+          value = value + upChange - downChange;
+        }
+        return value;
+      });
+
+      // Update uploader score.
+      uploaderRef.child("Score").transaction( (value) => {
+        if(value != null){
+          value = value + 5*(upChange - downChange);
+        }
+        return value;
       });
 
 
