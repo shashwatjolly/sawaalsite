@@ -128,10 +128,6 @@ app.post('/', urlencodedParser, (req, res) => {
     }
 });
 
-app.get('/index', (req, res) => {
-    res.render('index');
-});
-
 app.get('/leaderboard', (req, res) => {
     var MATERIAL = [
         "e57373",
@@ -182,4 +178,8 @@ app.get('/leaderboard', (req, res) => {
         }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
     }); 
+});
+
+app.get('/profile', (req, res) => {
+    res.render('profile');
 });
