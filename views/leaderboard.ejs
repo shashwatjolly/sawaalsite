@@ -21,7 +21,35 @@
 
 <body class="">
   <div class="wrapper ">
-    <%- include('navsidebar') %>
+      <div class="sidebar" data-color="purple" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+        <div class="logo">
+          <a href="/" class="simple-text logo-normal">
+            <img style="-webkit-filter: drop-shadow(1px 1px 1px black) drop-shadow(1px -1px 1px black); filter: drop-shadow(1px 1px 1px black) drop-shadow(-1px -1px 1px black);" src="assets/img/logo.png" width="100" height="100"/>
+          </a>
+        </div>
+        <div class="sidebar-wrapper">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="material-icons">search</i>
+                <p>Find Paper</p>
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="leaderboard">
+                <i class="material-icons">star</i>
+                <p>Leaderboard</p>
+              </a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" href="about">
+                <i class="material-icons">info_outline</i>
+                <p>About</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     <div class="main-panel">
       <div class="content">
         <div class="container-fluid">
@@ -40,10 +68,17 @@
                     </div>
                     <!-- <h3 class="col-md-4 card-title" style="text-align: center">CC</h4> -->
                     <div class="col-md-7">
+<<<<<<< HEAD
+                      <h4 class="card-title" style="text-align: center; line-height: 50px; margin-bottom: 0px"><%- users[i].Name %></h4>
+                    </div>
+                    <div class="col-md-2">
+                      <h4 class="card-title" style="text-align: center; line-height: 50px;"><%- users[i].Score %></h4>
+=======
                       <h3 class="card-title" style="text-align: center; line-height: 50px; margin-bottom: 0px"><%- users[i].Name %></h4>
                     </div>
                     <div class="col-md-2">
                       <h3 class="card-title" style="text-align: center; line-height: 50px;"><%- users[i].Score %></h4>
+>>>>>>> 950d9524f82a09327edfe8d0796d40803f11de6a
                     </div>
                   </div>
                 </div>
