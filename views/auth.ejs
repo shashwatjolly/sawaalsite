@@ -44,6 +44,7 @@
                 
             })
             .catch(function(error) {
+                console.log(error);
                 $(".loadingmsg")[0].innerHTML = "Sign-in failed. Please reload and try again.";
             });
       }

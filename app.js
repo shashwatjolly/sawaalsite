@@ -25,11 +25,7 @@ var databaseRef = firebaseApp.database();
 // To parse form data.
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-function getUserMail(){
-    return "shaurya.gomber98@iitg.ac.in";
-}
-
-function getPapersByYear(years,referString,res){
+function getPapersByYear(years,referString,res,loggedInUser){
     var locks = [];
     var papers = [];
 
@@ -39,7 +35,6 @@ function getPapersByYear(years,referString,res){
 
     var displayYear = years.length > 1; 
 
-    console.log(locks);
     for(var i=0;i<years.length;i++){
 
         var refString = `${referString}/${years[i]}`;
@@ -90,8 +85,7 @@ app.post('/', urlencodedParser, (req, res) => {
     const type = req.body.type;
     const year = req.body.year;
 
-    var loggedInUser = getUserMail();
-    
+    console.log(req.user);    
     if(year != ""){
         var referString = `Uploads/${code}_${type}/${year}`;
         var papersRef = databaseRef.ref(referString);
