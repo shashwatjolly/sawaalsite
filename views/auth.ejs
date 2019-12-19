@@ -34,7 +34,7 @@
                         "Email": user.email,
                         "Name": user.displayName,
                         "Rollno": result.additionalUserInfo.profile["surname"],
-                        "Score": "0"
+                        "Score": 0
                     }
                     var uid = user.uid;
                     db.ref("Users").child(uid).set(info);
