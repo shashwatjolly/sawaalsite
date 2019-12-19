@@ -125,3 +125,55 @@ app.post('/', urlencodedParser, (req, res) => {
 app.get('/index', (req, res) => {
     res.render('index');
 });
+
+app.get('/leaderboard', (req, res) => {
+    var MATERIAL = [
+        "e57373",
+        "f06292",
+        "ba68c8",
+        "9575cd",
+        "7986cb",
+        "64b5f6",
+        "4fc3f7",
+        "4dd0e1",
+        "4db6ac",
+        "81c784",
+        "aed581",
+        "ff8a65",
+        "d4e157",
+        "ffd54f",
+        "ffb74d",
+        "a1887f",
+        "90a4ae"
+    ];
+    hashCode = function(s) {
+        var h = 0, l = s.length, i = 0;
+        if ( l > 0 )
+            while (i < l)
+            h = (h << 5) - h + s.charCodeAt(i++) | 0;
+        return h;
+    }
+    getSrc = function(email, name) {
+        var hashcode = hashCode(email);
+        var col = MATERIAL[Math.abs(hashcode)%MATERIAL.length];
+        var words = name.split(" ");
+        var tname = words[0] + "+" + words[words.length-1];
+        var src = "https://ui-avatars.com/api/?background=" + col + "&color=fff&rounded=true&name=" + tname;
+        return src;
+    }
+    var referString = `Users`;
+    var usersRef = databaseRef.ref(referString);
+    var users = [];
+    var query = usersRef.orderByChild("Score");
+    query.on("value", function(snapshot){
+        snapshot.forEach(function(child) {
+            var user = child.val();
+            users.push(user);
+        });
+        users = users.reverse();
+        console.log(users);
+        res.render('leaderboard', {"users": users});    
+        }, function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+    }); 
+});
