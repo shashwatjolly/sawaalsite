@@ -50,12 +50,6 @@
               </a>
             </li>
             <li class="nav-item ">
-              <a class="nav-link" href="profile">
-                <i class="material-icons">account_circle</i>
-                <p>Profile</p>
-              </a>
-            </li>
-            <li class="nav-item ">
               <a class="nav-link" href="about">
                 <i class="material-icons">info_outline</i>
                 <p>About</p>
@@ -147,199 +141,203 @@
   <script src="./assets/js/material-dashboard.min.js?v=2.1.0" type="text/javascript"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="./assets/demo/demo.js"></script>
-  <%- include('auth') %>
-  <script>
-        var db = firebase.database();
-        var userMail = "";
-        auth.onAuthStateChanged(function(user) {
-        if (user) {
-          userMail = auth.currentUser.email;
-          highlight(userMail);
-        } else {
-          // No user is signed in.
-        }
-        });
-  
-        function inArray(needle, haystack){
-          var found = 0;
-          for (var i=0, len=haystack.length;i<len;i++) {
-              if (haystack[i] == needle) return i;
-                  found++;
-          }
-          return -1;
-        }
-  
-      function highlight(userMail){ 
-  
-        var papers = '<%- JSON.stringify(papers) %>';
-        var papersObj = JSON.parse(papers);
-  
-        $('.voters').each(function(i, obj) {
-            var idSel = '#'+obj["id"];
-            var ind = Number(i);
-            ind = Math.floor(ind/2);
-  
-            if(i%2 == 0){
-              var upvoters = papersObj[ind].upvoters;
-  
-              if(inArray(userMail,upvoters) != -1){
-                $(idSel).addClass("active");
-              }
-            }
-            else{
-              var downvoters = papersObj[ind].downvoters;
-  
-              if(inArray(userMail,downvoters) != -1){
-                $(idSel).addClass("active");
-              }
-            }
-        });
+    <%- include('auth') %>
+    <script>
+    var db = firebaseApp.database();
+
+      var userMail = "";
+      auth.onAuthStateChanged(function(user) {
+      if (user) {
+        userMail = auth.currentUser.email;
+        highlight(userMail);
+      } else {
+        // No user is signed in.
       }
-  
-   
-  
-      function clicked(isUpvote,myId,otherId,textId,index){
-  
-        var mainSelector = '#'+myId;
-        var otherSelector = '#'+otherId;
-        var textSelector = '#'+textId;
-  
-        index = Number(index);
-  
-        var paperString = '<%- JSON.stringify(papers) %>';
-        var papers = JSON.parse(paperString);
-        
-        if(isUpvote){
-          if($(mainSelector).hasClass("active")){
-            $(mainSelector).removeClass("active");
-            $(mainSelector).blur();
-  
-            var votes = Number($(textSelector).text());
-            $(textSelector).text(votes-1);
-  
-            performTransactions(-1,0,0,1,0,0,papers[index]);
+      });
+
+      function inArray(needle, haystack){
+        var found = 0;
+        for (var i=0, len=haystack.length;i<len;i++) {
+            if (haystack[i] == needle) return i;
+                found++;
+        }
+        return -1;
+      }
+
+    function highlight(userMail){ 
+
+      var papers = '<%- JSON.stringify(papers) %>';
+      var papersObj = JSON.parse(papers);
+
+      $('.voters').each(function(i, obj) {
+          var id = obj["id"];
+          var idSel = '#'+id;
+          var ind = Number(id[1]);
+          
+          if(id[0] == 'u'){
+            var upvoters = papersObj[ind].upvoters;
+
+            if(inArray(userMail,upvoters) != -1){
+              $(idSel).addClass("active");
+            }
           }
           else{
-            $(mainSelector).addClass("active");
-            $(mainSelector).blur();
-            var votes = Number($(textSelector).text());
-  
-            if($(otherSelector).hasClass("active")){
-                $(otherSelector).removeClass("active");
-                $(textSelector).text(votes+2);
-  
-                performTransactions(1,-1,1,0,0,1,papers[index]);
-  
+            var downvoters = papersObj[ind].downvoters;
+
+            if(inArray(userMail,downvoters) != -1){
+              $(idSel).addClass("active");
             }
-            else{
-                $(textSelector).text(votes+1);
-  
-                performTransactions(1,0,1,0,0,0,papers[index]);
-  
-            }
-  
           }
+      });
+    }
+
+ 
+
+    function clicked(isUpvote,myId,otherId,textId,index){
+
+      var mainSelector = '#'+myId;
+      var otherSelector = '#'+otherId;
+      var textSelector = '#'+textId;
+
+      index = Number(index);
+
+      var paperString = '<%- JSON.stringify(papers) %>';
+      var papers = JSON.parse(paperString);
+      
+      if(isUpvote){
+        if($(mainSelector).hasClass("active")){
+          $(mainSelector).removeClass("active");
+          $(mainSelector).blur();
+
+          var votes = Number($(textSelector).text());
+          $(textSelector).text(votes-1);
+
+          performTransactions(-1,0,0,1,0,0,papers[index]);
         }
         else{
-          if($(mainSelector).hasClass("active")){
-            $(mainSelector).removeClass("active");
-            $(mainSelector).blur();
-  
-            var votes = Number($(textSelector).text());
-            $(textSelector).text(votes+1);
-  
-            performTransactions(0,-1,0,0,0,1,papers[index]);
+          $(mainSelector).addClass("active");
+          $(mainSelector).blur();
+          var votes = Number($(textSelector).text());
+
+          if($(otherSelector).hasClass("active")){
+              $(otherSelector).removeClass("active");
+              $(textSelector).text(votes+2);
+
+              performTransactions(1,-1,1,0,0,1,papers[index]);
+
           }
           else{
-            $(mainSelector).addClass("active");
-            $(mainSelector).blur();
-            var votes = Number($(textSelector).text());
-  
-            if($(otherSelector).hasClass("active")){
-                $(otherSelector).removeClass("active");
-                $(textSelector).text(votes-2);
-  
-                performTransactions(-1,1,0,1,1,0,papers[index]);
-  
-            }
-            else{
-                $(textSelector).text(votes-1);
-                performTransactions(0,1,0,0,1,0,papers[index]);
-  
-            }
-  
+              $(textSelector).text(votes+1);
+
+              performTransactions(1,0,1,0,0,0,papers[index]);
+
+          }
+
+        }
+      }
+      else{
+        if($(mainSelector).hasClass("active")){
+          $(mainSelector).removeClass("active");
+          $(mainSelector).blur();
+
+          var votes = Number($(textSelector).text());
+          $(textSelector).text(votes+1);
+
+          performTransactions(0,-1,0,0,0,1,papers[index]);
+        }
+        else{
+          $(mainSelector).addClass("active");
+          $(mainSelector).blur();
+          var votes = Number($(textSelector).text());
+
+          if($(otherSelector).hasClass("active")){
+              $(otherSelector).removeClass("active");
+              $(textSelector).text(votes-2);
+
+              performTransactions(-1,1,0,1,1,0,papers[index]);
+
+          }
+          else{
+              $(textSelector).text(votes-1);
+              performTransactions(0,1,0,0,1,0,papers[index]);
+
+          }
+
+        }
+      }
+
+    }
+
+    function performTransactions(upChange,downChange,addup,delup,addown,deldown,paper){
+    
+      var referString = "Uploads/" + paper.CourseCode + "_" + paper.Type + "/" + paper.Year + "/" + paper.key;
+      var paperRef = db.ref(referString);
+
+      var uploaderRefString = "Users/" + paper.uploaderID;
+      var uploaderRef = db.ref(uploaderRefString);
+
+      // Change number of upvotes.
+      paperRef.child("upvoteCount").transaction( (value) => {
+        if(value != null){
+          value += upChange;
+        }
+        return value;
+      });
+
+      // Change number of downvotes.
+      paperRef.child("downvoteCount").transaction( (value) => {
+        if(value != null){
+          value += downChange;
+        }
+        return value;
+      });
+
+      // Update upvoters list.
+      paperRef.child("upvoters").transaction( (value) => {
+        if(value != null){
+          if(addup==1){
+            value.push(userMail);
+          }
+          else if(delup==1){
+            value.splice(value.indexOf(userMail),1);
           }
         }
-  
-      }
-  
-      function performTransactions(upChange,downChange,addup,delup,addown,deldown,paper){
-      
-        var referString = "Uploads/" + paper.CourseCode + "_" + paper.Type + "/" + paper.Year + "/" + paper.key;
-        var paperRef = db.ref(referString);
-  
-        var uploaderRefString = "Users/" + paper.uploaderID;
-        var uploaderRef = db.ref(uploaderRefString);
-  
-        // Change number of upvotes.
-        paperRef.child("upvoteCount").transaction( (value) => {
-          if(value != null){
-            value += upChange;
+        return value;
+      });
+
+      // Update downvoters list.
+      paperRef.child("downvoters").transaction( (value) => {
+        if(value != null){
+          if(addown==1){
+            value.push(userMail);
           }
-          return value;
-        });
-  
-        // Change number of downvotes.
-        paperRef.child("downvoteCount").transaction( (value) => {
-          if(value != null){
-            value += downChange;
+          else if(deldown==1){
+            value.splice(value.indexOf(userMail),1);
           }
-          return value;
-        });
-  
-        // Update upvoters list.
-        paperRef.child("upvoters").transaction( (value) => {
-          if(value != null){
-            if(addup==1){
-              value.push(userMail);
-            }
-            else if(delup==1){
-              value.splice(value.indexOf(userMail),1);
-            }
-          }
-          return value;
-        });
-  
-        // Update downvoters list.
-        paperRef.child("downvoters").transaction( (value) => {
-          if(value != null){
-            if(addown==1){
-              value.push(userMail);
-            }
-            else if(deldown==1){
-              value.splice(value.indexOf(userMail),1);
-            }
-          }
-          return value;
-        });
-  
-        // Change total votes.
-        paperRef.child("totalVotes").transaction( (value) => {
-          if(value != null){
-            value = value + upChange - downChange;
-          }
-          return value;
-        });
-  
-        // Update uploader score.
-        uploaderRef.child("Score").transaction( (value) => {
-          if(value != null){
-            value = value + 5*(upChange - downChange);
-          }
-          return value;
-        });
-      }
-    </script>
+        }
+        return value;
+      });
+
+      // Change total votes.
+      paperRef.child("totalVotes").transaction( (value) => {
+        if(value != null){
+          value = value + upChange - downChange;
+        }
+        return value;
+      });
+
+      // Update uploader score.
+      uploaderRef.child("Score").transaction( (value) => {
+        if(value != null){
+          value = value + 5*(upChange - downChange);
+        }
+        return value;
+      });
+
+
+    }
+
+  </script>
 </body>
 
 </html>

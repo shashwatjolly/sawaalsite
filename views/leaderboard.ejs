@@ -72,12 +72,20 @@
           <%- include('loading') %>
           <div class="row maincontent" hidden>
               <div class="col-md-6" style="margin: 0 auto">
+              <% var prevScore = "a"  %>
+              <% var ctr = 0 %>
+
               <% for (var i = 0; i < users.length; i++) { %>            
               <div class="card" id=<%- users[i].Email %> style="margin-bottom: 8px; margin-top: 8px">
                 <div class="card-body" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                   <div class="row">
                     <div class="col-md-1">
-                      <h4 class="card-title" style="text-align: center; line-height: 50px; margin-bottom: 0px"><%- i+1 %></h4>
+                     <%if ((prevScore == "a") || (prevScore != users[i].Score)) { %>
+                      <% ctr = ctr + 1 %>
+                      <% prevScore = users[i].Score %>
+                      <% } %>
+                      <h4 class="card-title" style="text-align: center; line-height: 50px; margin-bottom: 0px"><%- ctr %></h4>
+
                     </div>
                     <div class="col-md-2" style="height: 50px">
                       <img style="height: 50px; left: 50%; -moz-transform: translateX(50%); -webkit-transform: translateX(50%); transform: translateX(50%);" src=<%- getSrc(users[i].Email, users[i].Name) %>></img>
