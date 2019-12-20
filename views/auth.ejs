@@ -22,6 +22,9 @@
             $(".maincontent").removeAttr("hidden");
             $(".loading").hide();
       } else {
+        if($(".loadingmsg")[0].innerHTML == "You have been signed out") {
+            return;
+        }
         var provider = new firebase.auth.OAuthProvider('microsoft.com');
         provider.setCustomParameters({
             tenant: '850aa78d-94e1-4bc6-9cf3-8c11b530701c'
