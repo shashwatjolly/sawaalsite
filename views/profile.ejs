@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="./assets/img/logo.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    Sawaal - Leaderboard
+    Sawaal - Profile
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
     name='viewport' />
@@ -21,13 +21,12 @@
 
 <body class="">
   <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="navbar-toggler-icon icon-bar"></span>
-          <span class="navbar-toggler-icon icon-bar"></span>
-          <span class="navbar-toggler-icon icon-bar"></span>
-      </button>
-    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="navbar-toggler-icon icon-bar"></span>
+        <span class="navbar-toggler-icon icon-bar"></span>
+        <span class="navbar-toggler-icon icon-bar"></span>
+    </button>
   </nav>
   <div class="wrapper ">
       <div class="sidebar" data-color="purple" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
@@ -44,13 +43,13 @@
                 <p>Find Paper</p>
               </a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item ">
               <a class="nav-link" href="leaderboard">
                 <i class="material-icons">star</i>
                 <p>Leaderboard</p>
               </a>
             </li>
-            <li class="nav-item ">
+            <li class="nav-item active">
               <a class="nav-link" href="profile">
                 <i class="material-icons">account_circle</i>
                 <p>Profile</p>
@@ -66,43 +65,37 @@
         </div>
       </div>
     <div class="main-panel">
-      <div class="col-md-6 container-mycard" style="margin: 0 auto; position: sticky; position: -webkit-sticky; top: 0;"></div>
       <div class="content">
         <div class="container-fluid">
           <%- include('loading') %>
           <div class="row maincontent" hidden>
-              <div class="col-md-6" style="margin: 0 auto">
-              <% var prevScore = "a"  %>
-              <% var ctr = 0 %>
-
-              <% for (var i = 0; i < users.length; i++) { %>            
-              <div class="card" id=<%- users[i].Email %> style="margin-bottom: 8px; margin-top: 8px">
-                <div class="card-body" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
-                  <div class="row">
-                    <div class="col-md-1">
-                     <%if ((prevScore == "a") || (prevScore != users[i].Score)) { %>
-                      <% ctr = ctr + 1 %>
-                      <% prevScore = users[i].Score %>
-                      <% } %>
-                      <h4 class="card-title" style="text-align: center; line-height: 50px; margin-bottom: 0px"><%- ctr %></h4>
-
+            <div class="col-md-6" style="margin: 0 auto">
+              <div class="card card-profile">
+                <div class="card-avatar">
+                  <img id="profileimg" class="img" src="../assets/img/logo.png"/>
+                </div>
+                <div class="card-body">
+                  <h4 id="profilename" class="card-title">...</h4>
+                  <h3 id="profilescore" class="card-title">Score: </h3>
+                  <div style="width: max-content; margin: 0 auto; margin-top: 24px; margin-bottom: 24px">
+                    <div class="row" style="width: max-content; height: 24px; margin-bottom: 16px">
+                      <i class="material-icons" style="font-size: 24px; margin-right: 16px;">email</i>                    
+                      <h4 id="profileemail" style="line-height: 24px">
+                        ...
+                      </h4>
                     </div>
-                    <div class="col-md-2" style="height: 50px">
-                      <img style="height: 50px; left: 50%; -moz-transform: translateX(50%); -webkit-transform: translateX(50%); transform: translateX(50%);" src=<%- getSrc(users[i].Email, users[i].Name) %>></img>
-                    </div>
-                    <!-- <h3 class="col-md-4 card-title" style="text-align: center">CC</h4> -->
-                    <div class="col-md-7">
-                      <h4 class="card-title" style="text-align: center; line-height: 50px; margin-bottom: 0px"><%- users[i].Name %></h4>
-                    </div>
-                    <div class="col-md-2">
-                      <h4 class="card-title" style="text-align: center; line-height: 50px;"><%- users[i].Score %></h4>
+                    <div class="row" style="width: max-content; height: 24px; margin-bottom: 16px">
+                      <i class="material-icons" style="font-size: 24px; margin-right: 16px;">school</i>                    
+                      <h4 id="profileroll" style="line-height: 24px">
+                        ...
+                      </h4>
                     </div>
                   </div>
+                  <a id="signout" class="btn btn-primary btn-round" style="margin-bottom: 16px">Sign out</a>
                 </div>
               </div>
-              <% } %>   
             </div>
-          </div>
+        </div>
         </div>
       </div>
       <%- include('footer') %>
@@ -123,24 +116,72 @@
   <script src="./assets/js/material-dashboard.min.js?v=2.1.0" type="text/javascript"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="./assets/demo/demo.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <%- include('auth') %>
   <script>
+    var MATERIAL = [
+        "e57373",
+        "f06292",
+        "ba68c8",
+        "9575cd",
+        "7986cb",
+        "64b5f6",
+        "4fc3f7",
+        "4dd0e1",
+        "4db6ac",
+        "81c784",
+        "aed581",
+        "ff8a65",
+        "d4e157",
+        "ffd54f",
+        "ffb74d",
+        "a1887f",
+        "90a4ae"
+    ];
+    hashCode = function(s) {
+        var h = 0, l = s.length, i = 0;
+        if ( l > 0 )
+            while (i < l)
+            h = (h << 5) - h + s.charCodeAt(i++) | 0;
+        return h;
+    }
+    getSrc = function(email, name) {
+        var hashcode = hashCode(email);
+        var col = MATERIAL[Math.abs(hashcode)%MATERIAL.length];
+        var words = name.split(" ");
+        var tname = words[0] + "+" + words[words.length-1];
+        var src = "https://ui-avatars.com/api/?background=" + col + "&color=fff&rounded=true&size=512&name=" + tname;
+        return src;
+    }
     $(document).ready(function() {
       var t;
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-          t = user.email.replace(/\./g,"\\.");
-          t = t.replace(/\@/g,"\\@");
-          $(".container-mycard").append($("#"+t).clone().css("background-color", "rgb(255, 255, 153)").css("cursor", "pointer").attr('id', "mycard"));  
+          var referString = `Users/`+user.uid;
+          var databaseRef = firebase.database();
+          var userRef = databaseRef.ref(referString);
+          userRef.once("value").then(function(snapshot) {
+              console.log(snapshot.val());
+                $("#profileemail").html(user.email)
+                $("#profilename").html(user.displayName)
+                $("#profilescore").html("Score: " + snapshot.val().Score)
+                $("#profileroll").html(snapshot.val().Rollno)
+                $("#profileimg").attr("src", getSrc(user.email, user.displayName));
+              }, function (errorObject) {
+              console.log("The read failed: " + errorObject.code);
+          });  
         }
-        $("#mycard").click(function() {
-          $([document.documentElement, document.body]).animate({
-              scrollTop: $("#"+t).offset().top
-          }, 2000);
       });
+      $("#signout").on("click", function() {
+        auth.signOut().then(function() {
+          $(".loadingmsg")[0].innerHTML = "You have been signed out";
+          $(".loading").show();
+          $(".maincontent").attr("hidden", true);
+        }, function(error) {
+          console.error('Sign Out error', error);
+        });
       });
     });
+
   </script>
 </body>
 
