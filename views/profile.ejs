@@ -37,7 +37,7 @@
         </div>
         <div class="sidebar-wrapper">
           <ul class="nav">
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="/">
                 <i class="material-icons">search</i>
                 <p>Find Paper</p>
@@ -47,6 +47,12 @@
               <a class="nav-link" href="leaderboard">
                 <i class="material-icons">star</i>
                 <p>Leaderboard</p>
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="profile">
+                <i class="material-icons">account_circle</i>
+                <p>Profile</p>
               </a>
             </li>
             <li class="nav-item ">
@@ -67,25 +73,27 @@
               <div class="card card-profile">
                 <div class="card-avatar">
                   <a href="#pablo">
-                    <img id="profileimg" class="img" src="../assets/img/logo.png" />
+                    <img id="profileimg" class="img" src="../assets/img/logo.png"/>
                   </a>
                 </div>
                 <div class="card-body">
-                  <h4 id="profilename" class="card-title">Shashwat Jolly</h4>
-                  <h3 id="profilescore" class="card-title">Score: 10</h3>
+                  <h4 id="profilename" class="card-title">...</h4>
+                  <h3 id="profilescore" class="card-title">Score: </h3>
                   <div style="width: max-content; margin: 0 auto; margin-top: 24px; margin-bottom: 24px">
                     <div class="row" style="width: max-content; height: 24px; margin-bottom: 16px">
                       <i class="material-icons" style="font-size: 24px; margin-right: 16px;">email</i>                    
                       <h4 id="profileemail" style="line-height: 24px">
+                        ...
                       </h4>
                     </div>
                     <div class="row" style="width: max-content; height: 24px; margin-bottom: 16px">
                       <i class="material-icons" style="font-size: 24px; margin-right: 16px;">school</i>                    
                       <h4 id="profileroll" style="line-height: 24px">
+                        ...
                       </h4>
                     </div>
                   </div>
-                  <a href="#pablo" class="btn btn-primary btn-round">Sign out</a>
+                  <a id="signout" class="btn btn-primary btn-round">Sign out</a>
                 </div>
               </div>
             </div>
@@ -143,29 +151,36 @@
         var col = MATERIAL[Math.abs(hashcode)%MATERIAL.length];
         var words = name.split(" ");
         var tname = words[0] + "+" + words[words.length-1];
-        var src = "https://ui-avatars.com/api/?background=" + col + "&color=fff&rounded=true&name=" + tname;
+        var src = "https://ui-avatars.com/api/?background=" + col + "&color=fff&rounded=true&size=512&name=" + tname;
         return src;
     }
     $(document).ready(function() {
       var t;
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-          var referString = `Users/` + user.uid;
-            var databaseRef = firebase.database();
-            var userRef = databaseRef.ref(referString);
-            userRef.once("value").then(function(snapshot) {
-                console.log(snapshot);
-                snapshot.forEach(function(child) {
-                    $("#profileemail").html(user.email)
-                    $("#profilename").html(user.displayName)
-                    console.log(child.val());
-                    $("#profilescore").html(child.val().Score)
-                    $("#profileroll").html(child.val().Rollno)
-                });
-                }, function (errorObject) {
-                console.log("The read failed: " + errorObject.code);
-            });  
+          var referString = `Users/`+user.uid;
+          var databaseRef = firebase.database();
+          var userRef = databaseRef.ref(referString);
+          userRef.once("value").then(function(snapshot) {
+              console.log(snapshot.val());
+                $("#profileemail").html(user.email)
+                $("#profilename").html(user.displayName)
+                $("#profilescore").html("Score: " + snapshot.val().Score)
+                $("#profileroll").html(snapshot.val().Rollno)
+                $("#profileimg").attr("src", getSrc(user.email, user.displayName));
+              }, function (errorObject) {
+              console.log("The read failed: " + errorObject.code);
+          });  
         }
+      });
+      $("#signout").on("click", function() {
+        auth.signOut().then(function() {
+          $(".loadingmsg")[0].innerHTML = "You have been signed out";
+          $(".loading").show();
+          $(".maincontent").attr("hidden", true);
+        }, function(error) {
+          console.error('Sign Out error', error);
+        });
       });
     });
 
