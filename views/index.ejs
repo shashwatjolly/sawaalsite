@@ -141,23 +141,9 @@
   <script src="./assets/js/material-dashboard.min.js?v=2.1.0" type="text/javascript"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="./assets/demo/demo.js"></script>
-
-  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js"></script>
-  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
-  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/7.6.0/firebase-database.js"></script>
-  <script>
-    // Configuring firebase.
-    var firebaseApp = firebase.initializeApp({
-          apiKey: "AIzaSyAAqzctObFVSwj4YVwJh6NMARNTKqJCFFQ",
-          authDomain: "sawaal-sgsj.firebaseapp.com",
-          databaseURL: "https://sawaal-sgsj.firebaseio.com",
-          projectId: "sawaal-sgsj",
-          storageBucket: "sawaal-sgsj.appspot.com",
-          messagingSenderId: "1086466113456",
-          appId: "1:1086466113456:web:a4af7708fa679df8f4e075"
-      });
-      var auth = firebaseApp.auth();
-      var db = firebaseApp.database();
+    <%- include('auth') %>
+    <script>
+    var db = firebaseApp.database();
 
       var userMail = "";
       auth.onAuthStateChanged(function(user) {
@@ -184,11 +170,11 @@
       var papersObj = JSON.parse(papers);
 
       $('.voters').each(function(i, obj) {
-          var idSel = '#'+obj["id"];
-          var ind = Number(i);
-          ind = Math.floor(ind/2);
-
-          if(i%2 == 0){
+          var id = obj["id"];
+          var idSel = '#'+id;
+          var ind = Number(id[1]);
+          
+          if(id[0] == 'u'){
             var upvoters = papersObj[ind].upvoters;
 
             if(inArray(userMail,upvoters) != -1){
@@ -352,7 +338,6 @@
     }
 
   </script>
-  <%- include('auth') %>
 </body>
 
 </html>
