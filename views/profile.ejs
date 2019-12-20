@@ -76,7 +76,7 @@
                 </div>
                 <div class="card-body">
                   <h4 id="profilename" class="card-title">...</h4>
-                  <h3 id="profilescore" class="card-title">Score: </h3>
+                  <h3 id="profilescore" class="card-title">Score: ... </h3>
                   <div style="width: max-content; margin: 0 auto; margin-top: 24px; margin-bottom: 24px">
                     <div class="row" style="width: max-content; height: 24px; margin-bottom: 16px">
                       <i class="material-icons" style="font-size: 24px; margin-right: 16px;">email</i>                    
@@ -159,13 +159,13 @@
           var referString = `Users/`+user.uid;
           var databaseRef = firebase.database();
           var userRef = databaseRef.ref(referString);
+          $("#profileemail").html(user.email);
+          $("#profilename").html(user.displayName);
+          $("#profileimg").attr("src", getSrc(user.email, user.displayName));
           userRef.once("value").then(function(snapshot) {
               console.log(snapshot.val());
-                $("#profileemail").html(user.email)
-                $("#profilename").html(user.displayName)
-                $("#profilescore").html("Score: " + snapshot.val().Score)
-                $("#profileroll").html(snapshot.val().Rollno)
-                $("#profileimg").attr("src", getSrc(user.email, user.displayName));
+              $("#profileroll").html(snapshot.val().Rollno)
+              $("#profilescore").html("Score: " + snapshot.val().Score)
               }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
           });  
