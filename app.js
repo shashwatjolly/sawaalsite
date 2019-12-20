@@ -25,7 +25,7 @@ var databaseRef = firebaseApp.database();
 // To parse form data.
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-function getPapersByYear(years,referString,res,loggedInUser){
+function getPapersByYear(years,referString,res){
     var locks = [];
     var papers = [];
 
@@ -66,7 +66,7 @@ function getPapersByYear(years,referString,res,loggedInUser){
 
             console.log(done);
             if(done){
-                res.render('index', {"papers":papers});
+                return res.render('index', {"papers":papers});
             }
             
             }, function (errorObject) {
@@ -81,7 +81,8 @@ app.get('/', (req, res) => {
 
 app.post('/', urlencodedParser, (req, res) => {
     console.log(req.body);
-    const code = req.body.code;
+    const ccode = req.body.code;
+    const code = ccode.toUpperCase().replace(/\s/g, '');;
     const type = req.body.type;
     const year = req.body.year;
 
@@ -92,13 +93,20 @@ app.post('/', urlencodedParser, (req, res) => {
         
 
         papersRef.orderByChild("totalVotes").once("value").then(function(snapshot) {
+
+            if(!snapshot.exists()){
+                console.log("Here!!");
+                return res.render('form' , {"message":"No papers found!!"});
+            }
+
+
             var papers = [];
             snapshot.forEach(function(child) {
                 var paper = child.val();
                 paper.key = child.key;
                 papers.unshift(paper);
             });
-            res.render('index' , {"papers":papers});
+            return res.render('index' , {"papers":papers});
             }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
         });
@@ -110,6 +118,12 @@ app.post('/', urlencodedParser, (req, res) => {
 
         const years = [];
         yearsRef.once("value").then(function(snapshot) {
+
+            if(!snapshot.exists()){
+                console.log("Here1!!");
+                return res.render('form' , {"message":"No papers found!!"});
+            }
+
             snapshot.forEach(function(child) {
                 years.push(child.key);
             });

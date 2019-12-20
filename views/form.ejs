@@ -76,17 +76,23 @@
                         </div>
                         <div class="card-body">
                         <!-- Default form subscription -->
-                        <form method="POST">
-                            <div class = "form-group">
+                        <form method="POST" onsubmit="return validateForm()">
+                            <div class = "form-group" id="codeForm">
                             <!-- <p class="h4 text-center py-4">Find Paper</p> -->
                     
                               <label class="bmd-label-floating">Course Code</label>
-                              <input type="text" name="code" class="form-control">
+                              <input type="text" name="code" id="code" class="form-control">
+
+
+                              <span class="help-block text-danger" id="codeHelp" hidden>Error message</span>
+                              <span class="material-icons form-control-feedback">error_outline</span>
                             </div>
                     
-                            <br><br>
-                    
-                            <select name="type" class="custom-select mb-3"> 
+                            <br>
+                            
+                            <div class="form-group" id="typeForm">
+
+                            <select name="type" id="type" class="custom-select mb-3"> 
                                     <option selected>Type of Paper</option> 
                                     <option value="Quiz 1">Quiz 1</option> 
                                     <option value="Midsem">Midsem</option> 
@@ -94,11 +100,21 @@
                                     <option value="Endsem">Endsem</option>
                                     <option value="Other">Other</option> 
                                 </select> 
-                    
-                            <div class="form-group">
-                              <label for="courseYear" class="bmd-label-floating">Year of Examination</label>
-                              <input type="text" name="year" class="form-control">
+
+                                <span class="help-block text-danger" id="typeHelp" hidden>Error message</span>
+                                <span class="material-icons form-control-feedback">error_outline</span>
+
                             </div>
+                    
+                            <div class="form-group" id="yearForm">
+                              <label for="courseYear" class="bmd-label-floating">Year of Examination (Optional)</label>
+                              <input type="text" name="year" id="year" class="form-control">
+
+                              <span class="help-block text-danger" id="yearHelp" hidden>Error message</span>
+                              <span class="material-icons form-control-feedback">error_outline</span>
+
+                            </div>
+
                             <div class="text-center py-4 mt-3">
                             <button class="btn btn-primary btn-round" type="submit">Find<span class="glyphicon glyphicon-search"></span></button>
                           </div>
@@ -133,6 +149,61 @@
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="./assets/demo/demo.js"></script>
   <%- include('auth') %>
+
+  <script>
+    showNotification = function(from, align, message) {
+      type = 'danger';
+
+      $.notify({
+        icon: "error_outline",
+        message: message
+
+      }, {
+        type: type,
+        timer: 2000,
+        placement: {
+          from: from,
+          align: align
+        }
+      });
+    }
+
+    var messageType = '<%= typeof message%>';
+    console.log(messageType);
+    if(messageType == "string"){
+      showNotification("top","center","No papers found!!");
+    }
+
+    function validateForm(){
+
+      var ccode = $("#code").val();
+      var type = $("#type").val();
+
+      var isValid = true;
+
+      if(ccode == ""){
+        $("#codeForm").addClass("has-danger");
+        $("#codeHelp").html("Course Code can not be empty.");
+        $("#codeHelp").removeAttr("hidden");
+        isValid = false;
+      }else{
+        $("#codeForm").removeClass("has-danger");
+        $("#codeHelp").attr("hidden",true);
+      }
+
+      if(type == "Type of Paper"){
+        $("#typeForm").addClass("has-danger");
+        $("#typeHelp").html("Paper type can not be empty.");
+        $("#typeHelp").removeAttr("hidden");
+        isValid = false;
+      }else{
+        $("#typeForm").removeClass("has-danger");
+        $("#typeHelp").attr("hidden",true);
+      }
+
+      return isValid;
+    }
+  </script>
 </body>
 
 </html>
