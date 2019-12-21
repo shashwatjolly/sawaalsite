@@ -163,36 +163,6 @@
   <%- include('auth') %>
 
   <script>
-<<<<<<< HEAD
-    showNotification = function(from, align, message) {
-      type = 'danger';
-
-      $.notify({
-        icon: "error_outline",
-        message: message
-
-      }, {
-        type: type,
-        timer: 2000,
-        placement: {
-          from: from,
-          align: align
-        }
-      });
-    }
-
-    $(document).ready(function() {    
-      console.log($("#hacky").text());
-      if($("#hacky").text()==2){
-        $("#hacky").text(3);
-        // console.log("After");
-        // console.log($("#hacky").val());
-        showNotification("top","center","No papers found!!");
-      }
-    });
- 
-
-=======
       showNotification = function(from, align, message) {
         type = 'danger';
 
@@ -219,7 +189,6 @@
     </script>
 
   <script>
->>>>>>> 34ff403cc4a02f5b83421ab48307d1fefcb1349a
     function validateForm(){
       var ccode = $("#code").val();
       var type = $("#type").val();
