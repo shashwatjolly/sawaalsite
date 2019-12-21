@@ -68,18 +68,6 @@
       <div class="content">
         <div class="container-fluid">
           <%- include('loading') %>
-
-          <% if (locals.message) { %>
-
-          <p id="hacky" hidden> 2 </p>
-           
-           <% } else { %>
-
-          <p id="hacky" hidden> 3 </p>
-
-           <% }%>
-
-
           <div class="row maincontent" hidden>
             <div class="col-md-9" style="margin: 0 auto">
                 <div class="card mx-xl-5">
@@ -163,34 +151,32 @@
   <%- include('auth') %>
 
   <script>
-    showNotification = function(from, align, message) {
-      type = 'danger';
+      showNotification = function(from, align, message) {
+        type = 'danger';
 
-      $.notify({
-        icon: "error_outline",
-        message: message
+        $.notify({
+          icon: "error_outline",
+          message: message
 
-      }, {
-        type: type,
-        timer: 2000,
-        placement: {
-          from: from,
-          align: align
+        }, {
+          type: type,
+          timer: 2000,
+          placement: {
+            from: from,
+            align: align
+          }
+        });
+      }
+
+      $(document).ready(function() {    
+        if(window.location.hash=="#nopaper") {
+          showNotification("top","center","No papers found!");
+          window.location.hash="";
         }
       });
-    }
+    </script>
 
-    $(document).ready(function() {    
-      console.log($("#hacky").text());
-      if($("#hacky").text()==2){
-        $("#hacky").text(3);
-        // console.log("After");
-        // console.log($("#hacky").val());
-        showNotification("top","center","No papers found!!");
-      }
-    });
- 
-
+  <script>
     function validateForm(){
       var ccode = $("#code").val();
       var type = $("#type").val();
