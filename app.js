@@ -66,7 +66,7 @@ function getPapersByYear(years,referString,res){
 
             console.log(done);
             if(done){
-                return res.render('index', {"papers":papers});
+                res.render('index', {"papers":papers});
             }
             
             }, function (errorObject) {
@@ -96,7 +96,7 @@ app.post('/', urlencodedParser, (req, res) => {
 
             if(!snapshot.exists()){
                 console.log("Here!!");
-                return res.render('form' , {"message":"No papers found!!"});
+                res.render('form' , {"message":"No papers found!!"});
             }
 
 
@@ -106,7 +106,7 @@ app.post('/', urlencodedParser, (req, res) => {
                 paper.key = child.key;
                 papers.unshift(paper);
             });
-            return res.render('index' , {"papers":papers});
+            res.render('index' , {"papers":papers});
             }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
         });
@@ -121,7 +121,7 @@ app.post('/', urlencodedParser, (req, res) => {
 
             if(!snapshot.exists()){
                 console.log("Here1!!");
-                return res.render('form' , {"message":"No papers found!!"});
+                res.render('form' , {"message":"No papers found!!"});
             }
 
             snapshot.forEach(function(child) {

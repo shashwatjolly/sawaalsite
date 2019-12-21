@@ -68,6 +68,18 @@
       <div class="content">
         <div class="container-fluid">
           <%- include('loading') %>
+
+          <% if (locals.message) { %>
+
+          <p id="hacky" hidden> 2 </p>
+           
+           <% } else { %>
+
+          <p id="hacky" hidden> 3 </p>
+
+           <% }%>
+
+
           <div class="row maincontent" hidden>
             <div class="col-md-9" style="margin: 0 auto">
                 <div class="card mx-xl-5">
@@ -168,14 +180,18 @@
       });
     }
 
-    var messageType = '<%= typeof message%>';
-    console.log(messageType);
-    if(messageType == "string"){
-      showNotification("top","center","No papers found!!");
-    }
+    $(document).ready(function() {    
+      console.log($("#hacky").text());
+      if($("#hacky").text()==2){
+        $("#hacky").text(3);
+        // console.log("After");
+        // console.log($("#hacky").val());
+        showNotification("top","center","No papers found!!");
+      }
+    });
+ 
 
     function validateForm(){
-
       var ccode = $("#code").val();
       var type = $("#type").val();
 
@@ -200,7 +216,6 @@
         $("#typeForm").removeClass("has-danger");
         $("#typeHelp").attr("hidden",true);
       }
-
       return isValid;
     }
   </script>
