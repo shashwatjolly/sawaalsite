@@ -1,10 +1,11 @@
 const express = require('express');
-const path = require('path');
+const session = require('express-session');
 const firebase = require('firebase');
 const bodyParser =  require('body-parser');
 
 const app = express();
 app.set('view engine', 'ejs');
+app.use(session({secret: 'sawaal'}));
 app.use('/assets', express.static('./assets/'))
 const server = app.listen(7000, () => {
     console.log(`Express running → PORT ${server.address().port}`);
@@ -25,7 +26,7 @@ var databaseRef = firebaseApp.database();
 // To parse form data.
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-function getPapersByYear(years,referString,res){
+function getPapersByYear(years,referString,req,res){
     var locks = [];
     var papers = [];
 
@@ -66,7 +67,8 @@ function getPapersByYear(years,referString,res){
 
             console.log(done);
             if(done){
-                res.render('index', {"papers":papers});
+                req.session.papers = papers;
+                res.redirect('list');
             }
             
             }, function (errorObject) {
@@ -78,6 +80,11 @@ function getPapersByYear(years,referString,res){
 app.get('/', (req, res) => {
     res.render('form');
 });
+
+app.get('/list', (req, res) => {
+    var papers = req.session.papers;
+    res.render('index', {"papers": papers});
+})
 
 app.post('/', urlencodedParser, (req, res) => {
     console.log(req.body);
@@ -96,7 +103,7 @@ app.post('/', urlencodedParser, (req, res) => {
 
             if(!snapshot.exists()){
                 console.log("Here!!");
-                res.render('form' , {"message":"No papers found!!"});
+                res.redirect('#nopaper');
             }
 
 
@@ -106,7 +113,8 @@ app.post('/', urlencodedParser, (req, res) => {
                 paper.key = child.key;
                 papers.unshift(paper);
             });
-            res.render('index' , {"papers":papers});
+            req.session.papers = papers;
+            res.redirect('list');
             }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
         });
@@ -121,7 +129,7 @@ app.post('/', urlencodedParser, (req, res) => {
 
             if(!snapshot.exists()){
                 console.log("Here1!!");
-                res.render('form' , {"message":"No papers found!!"});
+                res.redirect('#nopaper');
             }
 
             snapshot.forEach(function(child) {
@@ -129,7 +137,7 @@ app.post('/', urlencodedParser, (req, res) => {
             });
             
             console.log(years);
-            getPapersByYear(years,referString,res);
+            getPapersByYear(years,referString,req,res);
             }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
         });
