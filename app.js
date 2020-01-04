@@ -186,6 +186,7 @@ app.get('/leaderboard', (req, res) => {
     query.on("value", function(snapshot){
         snapshot.forEach(function(child) {
             var user = child.val();
+            user.key = child.key;
             users.push(user);
         });
         users = users.reverse();
@@ -202,4 +203,16 @@ app.get('/profile', (req, res) => {
 
 app.get('/about', (req, res) => {
     res.render('about');
+});
+
+app.get('/leaderboard/userdetails/:uid', (req, res) => {
+
+    var uid = req.params.uid;
+    var userString = "Users/"+uid;
+    var userRef = databaseRef.ref(userString);
+
+    userRef.once("value").then( (snapshot) => {
+        var userInfo = snapshot.val();
+        res.render('userdetails',{"user":userInfo});
+    });
 });
