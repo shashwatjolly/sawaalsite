@@ -141,12 +141,16 @@
           t = user.email.replace(/\./g,"\\.");
           t = t.replace(/\@/g,"\\@");
           $(".container-mycard").append($("#"+t).clone().css("background-color", "rgb(255, 255, 153)").css("cursor", "pointer").attr('id', "mycard"));  
+          $("#mycard").removeAttr("onclick");
+       
+          $("#mycard").click(function() {
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#"+t).offset().top
+            }, 2000);
+          });
+
         }
-        $("#mycard").click(function() {
-          $([document.documentElement, document.body]).animate({
-              scrollTop: $("#"+t).offset().top
-          }, 2000);
-      });
+    
       });
     });
   </script>
